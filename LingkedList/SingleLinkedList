@@ -1,0 +1,276 @@
+#include <iostream>
+using namespace std;
+
+//Deklarasi single lingked
+struct Game {
+    string namaGame;
+    string platform;
+    int tahunRilis;
+    string genre;
+
+    Game *next;
+};
+
+Game *head, *tail, *cur, *newNode, *del; // Deklarasi pointer head, tail, cur, newNode, dan del bertipe Game.
+
+// Fungsi untuk membuat Single Linked List dengan satu node game
+void CreateSingelLingkedList(string namaGame, string platform, int tahunRilis, string genre) {
+    // Mengalokasikan memori untuk node pertama (head) dari linked list
+    // 'new Game' membuat objek Game baru dan mengembalikan pointer ke objek tersebut
+    head = new Game;
+
+    // Mengisi data node pertama dengan informasi game yang diberikan
+    head->namaGame = namaGame;    // Menyimpan nama game
+    head->platform = platform;    // Menyimpan kategori game
+    head->tahunRilis = tahunRilis;// Menyimpan tahun rilis game
+    head->genre = genre;          // Menyimpan genre game
+
+    // Menandai bahwa ini adalah node terakhir dalam list
+    // NULL menunjukkan bahwa tidak ada node setelah ini
+    head->next = NULL;
+
+    // Karena ini adalah satu-satunya node, maka tail juga menunjuk ke node ini
+    // Ini memudahkan penambahan node baru di akhir list nantinya
+    tail = head;
+}
+
+
+
+// fungsi untuk menambahkan node game baru di awal linked list
+void AddFirst(string namaGame, string platform, int tahunRilis, string genre) {
+    
+    cout << endl;
+    // Mengalokasikan memori untuk node baru
+    newNode = new Game;
+
+    // Mengisi data node baru dengan informasi game yang diberikan
+    newNode->namaGame = namaGame;    // Menyimpan nama game
+    newNode->platform = platform;    // Menyimpan kategori game
+    newNode->tahunRilis = tahunRilis;// Menyimpan tahun rilis game
+    newNode->genre = genre;          // Menyimpan genre game
+    newNode->next = head;            // Karena ingin menambahan node baru diatas node lain kita harus mengarahkan pointer next dari node baru ke head
+    head = newNode;                 // Mengarahkan head ke node baru, jadi node baru sekarang menjadi node pertama
+}
+
+void AddMiddle(string namaGame, string platform, int tahunRilis, string genre) { // Fungsi ini digunakan untuk menambahkan node game baru di tengah linked list
+    // Mengalokasikan memori untuk node baru
+    newNode = new Game; // Membuat objek Game baru dan mengembalikan pointer ke objek tersebut
+
+    // Mengisi data node baru dengan informasi game yang diberikan
+    newNode->namaGame = namaGame; // Menyimpan nama game
+    newNode->platform = platform; // Menyimpan kategori game
+    newNode->tahunRilis = tahunRilis; // Menyimpan tahun rilis game
+    newNode->genre = genre; // Menyimpan genre game
+    newNode->next = nullptr;  // Inisialisasi next pointer ke nullptr
+
+    // Penanganan kasus khusus: list kosong atau hanya satu node
+    if (head == nullptr || head->next == nullptr) { // Jika list kosong atau hanya memiliki satu node
+        newNode->next = head; // Maka node baru akan diarahkan ke head
+        head = newNode; // Mengarahkan head ke node baru
+        return; // Keluar dari fungsi
+    }
+
+    // Mencari posisi tengah menggunakan metode dua pointer
+    Game* slow = head;
+    Game* fast = head->next;
+
+    while (fast != nullptr && fast->next != nullptr) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    // Sekarang 'slow' menunjuk ke node tengah
+    // Menyisipkan node baru setelah node tengah
+    newNode->next = slow->next;
+    slow->next = newNode;
+}
+
+void AddLast(string namaGame, string platform, int tahunRilis, string genre){
+
+    // Mengalokasikan memori untuk node baru
+    newNode = new Game;
+
+    // Mengisi data node baru dengan informasi game yang diberikan
+    newNode->namaGame = namaGame;    // Menyimpan nama game
+    newNode->platform = platform;    // Menyimpan kategori game
+    newNode->tahunRilis = tahunRilis;// Menyimpan tahun rilis game
+    newNode->genre = genre;          // Menyimpan genre game
+    newNode->next = NULL;            // Karena ini adalah node terakhir, maka pointer next nya diarahkan ke NULL
+    tail->next = newNode;            // Mengarahkan pointer next dari node terakhir ke node baru
+    tail = newNode;                  // Mengarahkan tail ke node baru, jadi node baru sekarang menjadi node terakhir dalam list
+}
+
+void ChangeFirst(string namaGame, string platform, int tahunRilis, string genre){ // Fungsiini digunakan untuk mengubah data node pertama
+    head->namaGame = namaGame; // Mengubah nama game node pertama karena node pertama yang akan diubah datanya jadi kita mengarahkan ke head
+    head->platform = platform; // Mengubah platform game node pertama karena node pertama yang akan diubah datanya jadi kita mengarahkan ke head
+    head->tahunRilis = tahunRilis; // Mengubah tahun rilis game node pertama karena node pertama yang akan diubah datanya jadi kita mengarahkan ke head
+    head->genre = genre; // Mengubah genre game node pertama karena node pertama yang akan diubah datanya jadi kita mengarahkan ke head
+}
+
+void ChangeMidle(string namaGame, string platform, int tahunRilis, string genre) { // Fungsi ini digunakan untuk mengubah data node tengah
+    if (head == nullptr || head->next == nullptr) { // Jika list kosong atau hanya memiliki satu node
+     return; // Maka Keluar dari fungsi
+    }
+    
+    cur = head; // Mengarahkan pointer cur ke head karena kita akan mulai mencari node kedua
+    int pos = 2; // Karena kita ingin mengubah data node kedua maka kita mengatur posisi node yang akan diubah
+    
+    while (pos > 1 && cur != nullptr) { // Mengecek apakah posisi node yang akan diubah sudah sesuai atau belum, jika belum maka akan dijalankan perintah di bawah dan akan terus mengulang sampai posisi node yang akan diubah sesuai.
+        cur = cur->next; // Mengarahkan pointer cur ke node selanjutnya
+        pos--; // Mengurangi posisi node yang akan diubah
+    }
+    
+    if (cur == nullptr) { // Jika node kedua tidak ditemukan
+        return; // Maka keluar dari fungsi
+    }
+    
+    cur->namaGame = namaGame; // Mengubah nama game node kedua
+    cur->platform = platform; // Mengubah platform game node kedua
+    cur->tahunRilis = tahunRilis; // Mengubah tahun rilis game node kedua
+    cur->genre = genre; // Mengubah genre game node kedua
+}
+
+void ChangeLast(string namaGame, string platform, int tahunRilis, string genre) { //Fungsi ini digunakan untuk mengubah data yang ada pada node terakhir 
+    if (head == nullptr || head->next == nullptr) { // Jika list kosong atau hanya memiliki satu node
+        return; // Maka keluar dari fungsi
+    }
+    cur = head; // Mengarahkan pointer cur ke head karena kita akan mulai mencari node terakhir
+    while (cur->next != nullptr) { // Mengecek apakah cur next kosong atau tidak, jika tidak maka akan dijalankan perintah di bawah dan akan terus mengulang sampai cur next kosong.
+        cur = cur->next; // Mengarahkan pointer cur ke node selanjutnya
+    }
+    
+    tail->namaGame = namaGame; // Mengubah nama game node pertama karena node pertama yang akan diubah datanya jadi kita mengarahkan ke head
+    tail->platform = platform; // Mengubah platform game node pertama karena node pertama yang akan diubah datanya jadi kita mengarahkan ke head
+    tail->tahunRilis = tahunRilis; // Mengubah tahun rilis game node pertama karena node pertama yang akan diubah datanya jadi kita mengarahkan ke head
+    tail->genre = genre; // Mengubah genre game node pertama karena node pertama yang akan diubah datanya jadi kita mengarahkan ke head
+}
+
+void DeleteFirst(){ // Fungsi ini digunakan untuk menghapus node pertama
+    if (head == NULL){ // Jika list kosong
+        return; // Maka keluar dari fungsi
+    }
+    del = head; // Mengarahkan pointer del ke head
+    head = head -> next; // Mengarahkan head ke node selanjutnya
+    delete del; // Menghapus node pertama
+}
+
+void DelateMiddle(){
+    
+    if (head == NULL || head->next == NULL) { // Jika list kosong atau hanya memiliki satu node
+        return; // Maka keluar dari fungsi
+    }
+    if (head->next->next == NULL) { // Jika list memiliki dua node
+        delete head->next; // Maka hapus node kedua
+        head->next = NULL; // Mengarahkan pointer next dari node pertama ke NULL
+        return; // Keluar dari fungsi
+    }
+        if (del == NULL) { // Jika node kedua tidak ditemukan
+        return; // Maka keluar dari fungsi
+    }
+    del = head; // Mengarahkan pointer del ke head
+    int pos = 2; // Karena kita ingin menghapus node kedua maka kita mengatur posisi node yang akan dihapus
+    while (pos > 1 && del != NULL) { // Mengecek apakah posisi node yang akan dihapus sudah sesuai atau belum, jika belum maka akan dijalankan perintah di bawah dan akan terus mengulang sampai posisi node yang akan dihapus sesuai.
+        del = del->next; // Mengarahkan pointer del ke node selanjutnya
+        pos--; // Mengurangi posisi node yang akan dihapus
+    }
+    cur = head; // Mengarahkan pointer cur ke head
+    while (cur->next != del) { // Mengecek apakah cur next sama dengan del, jika tidak maka akan dijalankan perintah di bawah dan akan terus mengulang sampai cur next sama dengan del.
+        cur = cur->next; // Mengarahkan pointer cur ke node selanjutnya
+    }
+    cur->next = del->next; // Mengarahkan pointer next dari node sebelum node yang akan dihapus ke node setelah node yang akan dihapus
+    delete del; // Menghapus node yang akan dihapus
+}
+
+void DelateLast(){ // Fungsi ini digunakan untuk menghapus node terakhir
+    if (head == NULL){ // Jika list kosong
+        return; // Maka keluar dari fungsi
+    }
+    if (head -> next == NULL){ // Jika list hanya memiliki satu node
+        delete head; // Maka hapus node pertama
+        head = NULL; // Mengarahkan head ke NULL
+        return; // Keluar dari fungsi
+    }
+    cur = head; // Mengarahkan pointer cur ke head
+    while (cur -> next -> next != NULL){ // Mengecek apakah cur next next kosong atau tidak, jika tidak maka akan dijalankan perintah di bawah dan akan terus mengulang sampai cur next next kosong.
+        cur = cur -> next; // Mengarahkan pointer cur ke node selanjutnya
+    }
+    delete cur -> next; // Menghapus node terakhir
+    cur -> next = NULL; // Mengarahkan pointer next dari node sebelum node terakhir ke NULL
+}
+
+void PrintSingleLinkedList(){ // Fungsi untuk mencetak Single Linked List
+cur = head; // Mengarahkan pointer cur ke head, yang artinya kita akan mulai mencetak dari node pertama. 
+while ( cur != NULL){ //mengecek apakah cur kosong atau tidak, jika tidak maka akan dijalankan perintah di bawah dan akan terus mengulang sampai cur kosong.
+    cout << " Nama game adalah : " << cur -> namaGame << endl; // Mencetak nama game
+    cout << " Kamu bisa memainkan gamenya di platform : " << cur -> platform << endl; // Mencetak platform game
+    cout << " Game ini dirilis pada tahun : " << cur -> tahunRilis << endl; // Mencetak tahun rilis game
+    cout << " Game ini termasuk dalam genre : " << cur -> genre << endl; // Mencetak genre game
+    cout << "--------------------------------------------" << endl; // Mencetak garis pemisah antar node
+
+cur = cur -> next; //Cur yang awalnya node 1 diubah menjadi cur next yang artinya dia akan berpindah ke node selanjutnya, sampai cur nya NULL.
+}
+}
+
+int main(){
+
+    
+    CreateSingelLingkedList("The Witcher 3: Wild Hunt", "PlayStation 4, Xbox One, Microsoft Windows, Nintendo Switch", 2015, "Action role-playing");
+    cout << "Berhasil membuat single linked list dengan satu node : " << endl;
+    PrintSingleLinkedList();
+
+    cout << "\n" << endl;
+
+    AddFirst("Cyberpunk 2077", "PlayStation 4, PlayStation 5, Xbox One, Xbox Series X/S, Windows, Google Stadia", 2020, "Action role-playing");
+    cout << "Berhasil menambahkan game baru di awal linked list : " << endl;
+    PrintSingleLinkedList();
+
+    cout << "\n" << endl;
+
+    AddMiddle("Red Dead Redemption 2", "PlayStation 4, Xbox One, Microsoft Windows, Google Stadia", 2018, "Action-adventure");
+    cout << "Berhasil menambahkan game baru di tengah linked list : " << endl;
+    PrintSingleLinkedList();
+
+    cout << "\n" << endl;
+
+    AddLast("Assassin's Creed Valhalla", "PlayStation 4, PlayStation 5, Xbox One, Xbox Series X/S, Windows, Google Stadia", 2020, "Action role-playing");
+    cout << "Berhasil Menambahkan game baru di akhir linked list : " << endl;
+    PrintSingleLinkedList();
+
+    cout << "\n" << endl;
+
+    ChangeFirst("Horizon Zero Dawn", "PlayStation 4, Microsoft Windows", 2017, "Action role-playing");
+    cout << "Berhasil mengubah data game pertama : " << endl;
+    PrintSingleLinkedList();
+
+    cout << "\n" << endl;
+
+    ChangeMidle("God of War", "PlayStation 4", 2018, "Action-adventure");
+    cout << "Berhasil mengubah data game kedua : " << endl;
+    PrintSingleLinkedList();
+
+    cout << "\n" << endl;
+
+    ChangeLast("Sengoku Basara", "PlayStation 2, PlayStation 3, PlayStation 4, PlayStation Portable, Wii, Windows", 2005, "Hack and slash");
+    cout << "Berhasil mengubah data game terakhir : " << endl;
+    PrintSingleLinkedList();
+
+    DeleteFirst();
+    cout << "Berhasil menghapus game pertama : " << endl;
+    PrintSingleLinkedList();
+
+    DelateMiddle();
+    DelateMiddle();
+    cout << "Berhasil menghapus game tengah : " << endl;
+    PrintSingleLinkedList();
+
+    cout << "\n" << endl;
+
+    DelateLast();
+    cout << "Berhasil menghapus game terakhir ! " << endl;
+    PrintSingleLinkedList();
+
+    cout << "\n" << endl;
+
+    cout << "Berikut adalah data game yang tersisa : " << endl;
+    PrintSingleLinkedList();
+}
